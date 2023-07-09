@@ -1,0 +1,31 @@
+import discord
+from discord.ext import commands
+class Moderation(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+    @commands.command()
+    async def ban(self, ctx, member: discord.Member, *, reason=None):
+        """Bans a user from the server."""
+        if not ctx.author.permissions_in(ctx.guild).ban_members:
+            raise commands.MissingPermissions("You don't have permission to ban users.")
+        await ctx.guild.ban(member, reason=reason)
+    @commands.command()
+    async def kick(self, ctx, member: discord.Member, *, reason=None):
+        """Kicks a user from the server."""
+        if not ctx.author.permissions_in(ctx.guild).kick_members:
+            raise commands.MissingPermissions("You don't have permission to kick users.")
+        await ctx.guild.kick(member, reason=reason)
+    @commands.command()
+    async def mute(self, ctx, member: discord.Member, *, reason=None):
+        """Mutes a user in the server."""
+        if not ctx.author.permissions_in(ctx.guild).mute_members:
+            raise commands.MissingPermissions("You don't have permission to mute users.")
+        await ctx.guild.mute(member, reason=reason)
+    @commands.command()
+    async def unmute(self, ctx, member: discord.Member):
+        """Unmutes a user in the server."""
+        if not ctx.author.permissions_in(ctx.guild).mute_members:
+            raise commands.MissingPermissions("You don't have permission to unmute users.")
+        await ctx.guild.unmute(member)
+def setup(bot):
+    bot.add_cog(Moderation(bot))
